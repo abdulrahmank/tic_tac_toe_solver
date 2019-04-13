@@ -44,6 +44,32 @@ func TestBoard_AddValToLeft(t *testing.T) {
 	}
 }
 
+func TestBoard_AddValToTopOf(t *testing.T) {
+	board := ttt.Board{}
+	board.Init(3, 3)
+	_, err := board.AddValToTopOf(1, 0, "X")
+	if err != nil {
+		t.Error("Expected nil")
+	}
+
+	if board.Cells[0][0].Val != "X" {
+		t.Errorf("Expected X but was %v", board.Cells[0][1].Val)
+	}
+}
+
+func TestBoard_AddValToBottomOf(t *testing.T) {
+	board := ttt.Board{}
+	board.Init(3, 3)
+	_, err := board.AddValToBottomOf(0, 0, "X")
+	if err != nil {
+		t.Error("Expected nil")
+	}
+
+	if board.Cells[1][0].Val != "X" {
+		t.Errorf("Expected X but was %v", board.Cells[0][1].Val)
+	}
+}
+
 func TestBoard_HorizontalWin(t *testing.T) {
 	board := ttt.Board{}
 	board.Init(3, 3)

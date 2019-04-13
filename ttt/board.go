@@ -25,7 +25,29 @@ func (b *Board) Init(rows, cols int) {
 func (b *Board) AddValToLeft(row, col int, val string) (bool, error) {
 	if col-1 >= 0 {
 		b.Cells[row][col-1].Val = val
-		if b.IsHorizontalWin(row, val) || b.IsVerticalWin(col, val) || b.IsDiagonalWin(val) {
+		if b.IsHorizontalWin(row, val) || b.IsVerticalWin(col-1, val) || b.IsDiagonalWin(val) {
+			return true, nil
+		}
+		return false, nil
+	}
+	return false, errors.New("can't place")
+}
+
+func (b *Board) AddValToTopOf(row, col int, val string) (bool, error) {
+	if row-1 >= 0 {
+		b.Cells[row-1][col].Val = val
+		if b.IsHorizontalWin(row-1, val) || b.IsVerticalWin(col, val) || b.IsDiagonalWin(val) {
+			return true, nil
+		}
+		return false, nil
+	}
+	return false, errors.New("can't place")
+}
+
+func (b *Board) AddValToBottomOf(row, col int, val string) (bool, error) {
+	if row+1 >= 0 {
+		b.Cells[row+1][col].Val = val
+		if b.IsHorizontalWin(row+1, val) || b.IsVerticalWin(col, val) || b.IsDiagonalWin(val) {
 			return true, nil
 		}
 		return false, nil
