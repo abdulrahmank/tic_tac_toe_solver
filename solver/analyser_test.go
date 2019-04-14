@@ -85,4 +85,33 @@ func TestGetCellWiseWinProbability(t *testing.T) {
 		}
 	})
 
+
+	t.Run("Should get LOSE status if opponent can win diagonally", func(t *testing.T) {
+		board := ttt.Board{}
+		board.Init(3, 3)
+		board.Cells[0][0].Val = string(ttt.X)
+		board.Cells[2][2].Val = string(ttt.X)
+		board.Cells[1][0].Val = string(ttt.O)
+
+		probability := GetCellWiseWinProbability(board, ttt.O)
+
+		if probability[*board.Cells[1][1]] != LOSE {
+			t.Errorf("Expected LOSE but was %d", probability[*board.Cells[1][1]])
+		}
+	})
+
+	t.Run("Should get WIN status if we can win diagonally", func(t *testing.T) {
+		board := ttt.Board{}
+		board.Init(3, 3)
+		board.Cells[0][0].Val = string(ttt.O)
+		board.Cells[2][2].Val = string(ttt.O)
+		board.Cells[1][0].Val = string(ttt.X)
+
+		probability := GetCellWiseWinProbability(board, ttt.O)
+
+		if probability[*board.Cells[1][1]] != WIN {
+			t.Errorf("Expected WIN but was %d", probability[*board.Cells[1][1]])
+		}
+	})
+
 }
