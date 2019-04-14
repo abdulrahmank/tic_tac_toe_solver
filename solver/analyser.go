@@ -12,7 +12,13 @@ const (
 	POTENTIAL_LOSE GameStatus = 3
 )
 
-func GetCellWiseWinProbability(b ttt.Board, c ttt.BoardCharacter) map[ttt.Cell]GameStatus {
+type Analyser interface {
+	GetCellWiseWinProbability(b ttt.Board, c ttt.BoardCharacter) map[ttt.Cell]GameStatus
+}
+
+type AnalyserImpl struct{}
+
+func (a *AnalyserImpl) GetCellWiseWinProbability(b ttt.Board, c ttt.BoardCharacter) map[ttt.Cell]GameStatus {
 	result := make(map[ttt.Cell]GameStatus)
 	for _, row := range b.Cells {
 		for _, cell := range row {
