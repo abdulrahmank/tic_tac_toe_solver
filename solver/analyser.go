@@ -46,7 +46,7 @@ func (a *AnalyserImpl) GetCellWiseWinProbability(b ttt.Board, c ttt.BoardCharact
 					colStatus[b.Cells[ti][ti].Val] += 1
 				}
 			}
-
+			// 2 will only work for 3 X 3 board
 			if rowStatus[string(c)]|colStatus[string(c)]|diagonalStatus[string(c)] >= 2 {
 				result[*b.Cells[i][j]] = WIN
 			} else {
