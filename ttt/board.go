@@ -5,13 +5,13 @@ import (
 )
 
 type Board struct {
-	rows, cols int
+	Rows, Cols int
 	Cells      [][]*Cell
 }
 
 func (b *Board) Init(rows, cols int) {
-	b.rows = rows
-	b.cols = cols
+	b.Rows = rows
+	b.Cols = cols
 	b.Cells = make([][]*Cell, 0)
 	for i := 0; i < rows; i++ {
 		cells := make([]*Cell, 0)
@@ -67,7 +67,7 @@ func (b *Board) AddValToRight(row, col int, val string) (bool, error) {
 }
 
 func (b *Board) IsHorizontalWin(row int, val string) bool {
-	for i := 0; i < b.cols; i++ {
+	for i := 0; i < b.Cols; i++ {
 		if b.Cells[row][i].Val != val {
 			return false
 		}
@@ -76,7 +76,7 @@ func (b *Board) IsHorizontalWin(row int, val string) bool {
 }
 
 func (b *Board) IsVerticalWin(col int, val string) bool {
-	for i := 0; i < b.rows; i++ {
+	for i := 0; i < b.Rows; i++ {
 		if b.Cells[i][col].Val != val {
 			return false
 		}
@@ -85,7 +85,7 @@ func (b *Board) IsVerticalWin(col int, val string) bool {
 }
 
 func (b *Board) IsDiagonalWin(val string) bool {
-	for i := 0; i < b.rows; i++ {
+	for i := 0; i < b.Rows; i++ {
 		if b.Cells[i][i].Val != val {
 			return false
 		}
