@@ -92,3 +92,15 @@ func (b *Board) IsDiagonalWin(val string) bool {
 	}
 	return true
 }
+
+func (b *Board) GetEmptyCells() []Cell {
+	emptyCells := make([]Cell, 0)
+	for _, row := range b.Cells {
+		for _, cell := range row {
+			if cell.Val == "" {
+				emptyCells = append(emptyCells, *cell)
+			}
+		}
+	}
+	return emptyCells
+}

@@ -91,7 +91,6 @@ func TestBoard_HorizontalWin(t *testing.T) {
 	}
 }
 
-
 func TestBoard_VerticalWin(t *testing.T) {
 	board := ttt.Board{}
 	board.Init(3, 3)
@@ -130,3 +129,37 @@ func TestBoard_DiagonalWin(t *testing.T) {
 	}
 }
 
+func TestBoard_GetEmptyCells(t *testing.T) {
+	board := ttt.Board{}
+	board.Init(3, 3)
+
+	board.Cells[0][0].Val = "X"
+	board.Cells[1][1].Val = "X"
+	board.Cells[1][2].Val = "X"
+
+	expected :=
+		[]ttt.Cell{*board.Cells[0][1], *board.Cells[0][2], *board.Cells[1][0], *board.Cells[2][0],
+			*board.Cells[2][1], *board.Cells[2][2]}
+
+	actual := board.GetEmptyCells()
+
+	if len(actual) != len(expected) {
+		t.Errorf("Expected %d but was %d", len(actual), len(expected))
+	}
+
+	for _, cell := range expected {
+		if !contains(actual, cell) {
+			t.Errorf("Not all cells found")
+			break
+		}
+	}
+}
+
+func contains(cells []ttt.Cell, cell ttt.Cell) bool {
+	for _, c := range cells {
+		if c == cell {
+			return true
+		}
+	}
+	return false
+}
