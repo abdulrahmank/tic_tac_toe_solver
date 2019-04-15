@@ -1,6 +1,9 @@
 package handler
 
-import "testing"
+import (
+	"github.com/abdulrahmank/solver/tic_tac_toe/ttt"
+	"testing"
+)
 
 func TestCellJson_ConvertToCell(t *testing.T) {
 	i := "X"
@@ -65,6 +68,38 @@ func TestBoardJson_ConvertToBoard(t *testing.T) {
 				t.Errorf("Expected %s but was %s", *expectedVal[count], board.Cells[i][j].Val)
 			}
 			count += 1
+		}
+	}
+}
+
+func TestConvertToBoardJson(t *testing.T) {
+	board := ttt.Board{}
+	board.Init(3, 3)
+
+	board.Cells[0][0].Val = "X"
+	board.Cells[0][1].Val = "X"
+	board.Cells[0][2].Val = "X"
+
+	board.Cells[1][0].Val = "X"
+	board.Cells[1][1].Val = "O"
+	board.Cells[1][2].Val = "X"
+
+	boardJson := ConvertToBoardJson(board)
+
+	x := "X"
+	o := "O"
+	empty := ""
+
+	expectedVals := []*string{&x, &x, &x, &x, &o, &x, &empty, &empty, &empty}
+	expectedPos := []string{"0,0", "0,1", "0,2", "1,0", "1,1", "1,2", "2,0", "2,1", "2,2"}
+
+	for index, c := range boardJson.Cells {
+		if c.Position != expectedPos[index] {
+			t.Errorf("Expected %s but was %s", expectedPos[index], c.Position)
+		}
+
+		if *c.Value != *expectedVals[index] {
+			t.Errorf("Expected %s but was %s", *expectedVals[index], *c.Value)
 		}
 	}
 }

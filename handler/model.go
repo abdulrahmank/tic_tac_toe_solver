@@ -1,6 +1,7 @@
 package handler
 
 import (
+	"fmt"
 	"github.com/abdulrahmank/solver/tic_tac_toe/ttt"
 	"strconv"
 	"strings"
@@ -43,4 +44,15 @@ func (c *CellJson) ConvertToCell() (int, *ttt.Cell) {
 		upper = strings.ToUpper(*c.Value)
 	}
 	return row, &ttt.Cell{Row: row, Column: col, Val: upper}
+}
+
+func ConvertToBoardJson(b ttt.Board) BoardJson {
+	cJsons := make([]CellJson, 0)
+	for _, row := range b.Cells {
+		for _, cell := range row {
+			cellJson := CellJson{Position: fmt.Sprintf("%d,%d", cell.Row, cell.Column), Value: &cell.Val}
+			cJsons = append(cJsons, cellJson)
+		}
+	}
+	return BoardJson{Cells: cJsons}
 }
