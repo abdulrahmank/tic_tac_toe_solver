@@ -4,6 +4,19 @@ import (
 	"errors"
 )
 
+type BoardCharacter string
+
+const (
+	X BoardCharacter = "X"
+	O BoardCharacter = "O"
+)
+
+type Cell struct {
+	Row    int
+	Column int
+	Val    string
+}
+
 type Board struct {
 	Rows, Cols int
 	Cells      [][]*Cell
