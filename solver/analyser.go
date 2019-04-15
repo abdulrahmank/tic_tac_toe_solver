@@ -27,8 +27,12 @@ func (a *AnalyserImpl) GetCellWiseWinProbability(b ttt.Board, c ttt.BoardCharact
 		}
 	}
 
+	emptyCells := b.GetEmptyCells()
 	for i := 0; i < b.Rows; i++ {
 		for j := 0; j < b.Cols; j++ {
+			if !contains(emptyCells, b.Cells[i][j]) {
+				continue
+			}
 			rowStatus := make(map[string]int)
 			colStatus := make(map[string]int)
 			diagonalStatus := make(map[string]int)
@@ -68,4 +72,13 @@ func (a *AnalyserImpl) GetCellWiseWinProbability(b ttt.Board, c ttt.BoardCharact
 	}
 
 	return result
+}
+
+func contains(cells []ttt.Cell, cell *ttt.Cell) bool {
+	for _, c := range cells {
+		if *cell == c {
+			return true
+		}
+	}
+	return false
 }
