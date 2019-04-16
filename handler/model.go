@@ -50,7 +50,13 @@ func ConvertToBoardJson(b ttt.Board) BoardJson {
 	cJsons := make([]CellJson, 0)
 	for _, row := range b.Cells {
 		for _, cell := range row {
-			cellJson := CellJson{Position: fmt.Sprintf("%d,%d", cell.Row, cell.Column), Value: &cell.Val}
+			var val *string
+			if cell.Val != "" {
+				val = &cell.Val
+			} else {
+				val = nil
+			}
+			cellJson := CellJson{Position: fmt.Sprintf("%d,%d", cell.Row, cell.Column), Value: val}
 			cJsons = append(cJsons, cellJson)
 		}
 	}

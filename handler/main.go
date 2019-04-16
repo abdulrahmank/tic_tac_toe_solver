@@ -23,7 +23,7 @@ func Play(w http.ResponseWriter, r *http.Request) {
 			return
 		}
 
-		if bytes, err := json.Marshal(ConvertToBoardJson(board)); err != nil {
+		if bytes, err := json.Marshal(ConvertToBoardJson(board).Cells); err != nil {
 			w.WriteHeader(http.StatusInternalServerError)
 			return
 		} else {
