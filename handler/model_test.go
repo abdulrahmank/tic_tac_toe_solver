@@ -1,7 +1,9 @@
 package handler
 
 import (
+	"encoding/json"
 	"github.com/abdulrahmank/solver/tic_tac_toe/ttt"
+	"strings"
 	"testing"
 )
 
@@ -101,5 +103,19 @@ func TestConvertToBoardJson(t *testing.T) {
 		if *c.Value != *expectedVals[index] {
 			t.Errorf("Expected %s but was %s", *expectedVals[index], *c.Value)
 		}
+	}
+}
+
+func TestShouldBeAbleToUnmarshalJsonIntoCellJson(t *testing.T) {
+	jsonStr := "[{\"position\": \"1,1\",\"value\": \"x\"}]"
+
+	cells := make([]CellJson, 0)
+
+	if err := json.NewDecoder(strings.NewReader(jsonStr)).Decode(&cells); err != nil {
+		t.Errorf("Expected nil but was %v", err)
+	}
+
+	if *cells[0].Value != "x" {
+		t.Errorf("Expected %s but was %s", "x", *cells[0].Value)
 	}
 }
