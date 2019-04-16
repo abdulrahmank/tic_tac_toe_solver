@@ -5,7 +5,16 @@ import (
 	"github.com/abdulrahmank/solver/tic_tac_toe/ttt"
 )
 
-func Solve(board ttt.Board, analyser Analyser) error {
+type GameStatus string
+
+const (
+	LOST        GameStatus = "lost"
+	IN_PROGRESS GameStatus = "inProgress"
+	WON         GameStatus = "won"
+	DRAW        GameStatus = "draw"
+)
+
+func Solve(board ttt.Board, analyser Analyser) (GameStatus, error) {
 	cells := analyser.GetCellWiseWinProbability(board, ttt.O)
 	cellBucket := make(map[CellStatus][]ttt.Cell)
 	for _, gs := range []CellStatus{WIN, LOSE, POTENTIAL_LOSE, POTENTIAL_WIN, NEUTRAL} {
@@ -41,10 +50,17 @@ func Solve(board ttt.Board, analyser Analyser) error {
 	}
 
 	if row == -1 || column == -1 {
-		return errors.New("can't place")
+		return IN_PROGRESS, errors.New("can't place")
 	}
 
 	board.Cells[row][column].Val = string(ttt.O)
+	if board.IsHorizontalWin(row, string(ttt.O)) ||
+		board.IsVerticalWin(column, string(ttt.O)) ||
+		board.IsDiagonalWin(string(ttt.O)) {
+		return WON, nil
+	} else if len(board.GetEmptyCells()) == 0 {
+		return DRAW, nil
+	}
 
-	return nil
+	return IN_PROGRESS, nil
 }

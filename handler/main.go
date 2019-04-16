@@ -3,6 +3,7 @@ package handler
 import (
 	"encoding/json"
 	"github.com/abdulrahmank/solver/tic_tac_toe/solver"
+	"github.com/abdulrahmank/solver/tic_tac_toe/ttt"
 	"net/http"
 )
 
@@ -17,19 +18,46 @@ func Play(w http.ResponseWriter, r *http.Request) {
 
 		boardJson := &BoardJson{Cells: cells}
 		board := boardJson.ConvertToBoard()
-		analyserImpl := &solver.AnalyserImpl{}
-		if err := solver.Solve(board, analyserImpl); err != nil {
-			w.WriteHeader(http.StatusInternalServerError)
+
+		if playerWon(board) {
+			board.Init(3, 3)
+			result := ConvertToBoardJson(board)
+			result.Status = solver.LOST
+			respond(result, w)
 			return
 		}
 
-		if bytes, err := json.Marshal(ConvertToBoardJson(board).Cells); err != nil {
+		analyserImpl := &solver.AnalyserImpl{}
+		if gs, err := solver.Solve(board, analyserImpl); err != nil {
 			w.WriteHeader(http.StatusInternalServerError)
-			return
 		} else {
-			_, _ = w.Write(bytes)
-			w.WriteHeader(http.StatusOK)
+			result := ConvertToBoardJson(board)
+			result.Status = gs
+			respond(result, w)
 		}
 	}
 	w.WriteHeader(http.StatusNotImplemented)
+}
+
+func respond(result BoardJson, w http.ResponseWriter) {
+	if bytes, err := json.Marshal(result); err != nil {
+		w.WriteHeader(http.StatusInternalServerError)
+	} else {
+		_, _ = w.Write(bytes)
+		w.WriteHeader(http.StatusOK)
+	}
+}
+
+func playerWon(board ttt.Board) bool {
+	for i := 0; i < board.Rows; i++ {
+		if board.IsHorizontalWin(i, string(ttt.X)) {
+			return true
+		}
+	}
+	for i := 0; i < board.Cols; i++ {
+		if board.IsVerticalWin(i, string(ttt.X)) {
+			return true
+		}
+	}
+	return board.IsDiagonalWin(string(ttt.X))
 }

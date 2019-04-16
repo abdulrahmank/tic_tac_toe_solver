@@ -31,7 +31,11 @@ func TestSolver(t *testing.T) {
 
 		analyser.EXPECT().GetCellWiseWinProbability(board, ttt.O).Return(cellStatuses)
 
-		err := solver.Solve(board, analyser)
+		gs, err := solver.Solve(board, analyser)
+
+		if gs != solver.IN_PROGRESS {
+			t.Errorf("Expected %s but was %s", solver.IN_PROGRESS, gs)
+		}
 
 		if err != nil {
 			t.Errorf("Expected nil error")
@@ -64,7 +68,14 @@ func TestSolver(t *testing.T) {
 
 		analyser.EXPECT().GetCellWiseWinProbability(board, ttt.O).Return(cellStatuses)
 
-		err := solver.Solve(board, analyser)
+		board.Cells[1][1].Val = string(ttt.O)
+		board.Cells[2][1].Val = string(ttt.O)
+
+		gs, err := solver.Solve(board, analyser)
+
+		if gs != solver.WON {
+			t.Errorf("Expected %s but was %s", solver.WON, gs)
+		}
 
 		if err != nil {
 			t.Errorf("Expected nil error")
@@ -98,7 +109,11 @@ func TestSolver(t *testing.T) {
 
 		analyser.EXPECT().GetCellWiseWinProbability(board, ttt.O).Return(cellStatuses)
 
-		err := solver.Solve(board, analyser)
+		gs, err := solver.Solve(board, analyser)
+
+		if gs != solver.IN_PROGRESS {
+			t.Errorf("Expected %s but was %s", solver.IN_PROGRESS, gs)
+		}
 
 		if err != nil {
 			t.Errorf("Expected nil error")
@@ -109,7 +124,7 @@ func TestSolver(t *testing.T) {
 		}
 	})
 
-	t.Run("Should be able to make acquire a  potential win", func(t *testing.T) {
+	t.Run("Should be able to make acquire a potential win", func(t *testing.T) {
 		ctrl := gomock.NewController(t)
 		defer ctrl.Finish()
 		analyser := solver_mock.NewMockAnalyser(ctrl)
@@ -132,10 +147,14 @@ func TestSolver(t *testing.T) {
 
 		analyser.EXPECT().GetCellWiseWinProbability(board, ttt.O).Return(cellStatuses)
 
-		err := solver.Solve(board, analyser)
+		gameStatus, err := solver.Solve(board, analyser)
 
 		if err != nil {
 			t.Errorf("Expected nil error")
+		}
+
+		if gameStatus != solver.IN_PROGRESS {
+			t.Errorf("Expected %s but was %s", solver.IN_PROGRESS, gameStatus)
 		}
 
 		if board.Cells[1][0].Val != string(ttt.O) {

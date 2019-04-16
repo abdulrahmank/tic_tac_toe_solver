@@ -2,13 +2,15 @@ package handler
 
 import (
 	"fmt"
+	"github.com/abdulrahmank/solver/tic_tac_toe/solver"
 	"github.com/abdulrahmank/solver/tic_tac_toe/ttt"
 	"strconv"
 	"strings"
 )
 
 type BoardJson struct {
-	Cells []CellJson
+	Cells  []CellJson
+	Status solver.GameStatus
 }
 
 type CellJson struct {
