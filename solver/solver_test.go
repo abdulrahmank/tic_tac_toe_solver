@@ -16,7 +16,7 @@ func TestSolver(t *testing.T) {
 		board := ttt.Board{}
 		board.Init(3, 3)
 
-		cellStatuses := make(map[ttt.Cell]solver.GameStatus)
+		cellStatuses := make(map[ttt.Cell]solver.CellStatus)
 		cellStatuses[ttt.Cell{Row: 0, Column: 0}] = solver.LOSE
 		cellStatuses[ttt.Cell{Row: 0, Column: 1}] = solver.NEUTRAL
 		cellStatuses[ttt.Cell{Row: 0, Column: 2}] = solver.POTENTIAL_LOSE
@@ -49,7 +49,7 @@ func TestSolver(t *testing.T) {
 		board := ttt.Board{}
 		board.Init(3, 3)
 
-		cellStatuses := make(map[ttt.Cell]solver.GameStatus)
+		cellStatuses := make(map[ttt.Cell]solver.CellStatus)
 		cellStatuses[ttt.Cell{Row: 0, Column: 0}] = solver.LOSE
 		cellStatuses[ttt.Cell{Row: 0, Column: 1}] = solver.WIN
 		cellStatuses[ttt.Cell{Row: 0, Column: 2}] = solver.POTENTIAL_LOSE
@@ -82,7 +82,7 @@ func TestSolver(t *testing.T) {
 		board := ttt.Board{}
 		board.Init(3, 3)
 
-		cellStatuses := make(map[ttt.Cell]solver.GameStatus)
+		cellStatuses := make(map[ttt.Cell]solver.CellStatus)
 		cellStatuses[ttt.Cell{Row: 0, Column: 0}] = solver.NEUTRAL
 		cellStatuses[ttt.Cell{Row: 0, Column: 1}] = solver.NEUTRAL
 		cellStatuses[ttt.Cell{Row: 0, Column: 2}] = solver.POTENTIAL_LOSE
@@ -116,7 +116,7 @@ func TestSolver(t *testing.T) {
 		board := ttt.Board{}
 		board.Init(3, 3)
 
-		cellStatuses := make(map[ttt.Cell]solver.GameStatus)
+		cellStatuses := make(map[ttt.Cell]solver.CellStatus)
 		cellStatuses[ttt.Cell{Row: 0, Column: 0}] = solver.NEUTRAL
 		cellStatuses[ttt.Cell{Row: 0, Column: 1}] = solver.NEUTRAL
 		cellStatuses[ttt.Cell{Row: 0, Column: 2}] = solver.NEUTRAL

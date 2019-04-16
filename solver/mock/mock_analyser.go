@@ -35,10 +35,10 @@ func (m *MockAnalyser) EXPECT() *MockAnalyserMockRecorder {
 }
 
 // GetCellWiseWinProbability mocks base method
-func (m *MockAnalyser) GetCellWiseWinProbability(b ttt.Board, c ttt.BoardCharacter) map[ttt.Cell]solver.GameStatus {
+func (m *MockAnalyser) GetCellWiseWinProbability(b ttt.Board, c ttt.BoardCharacter) map[ttt.Cell]solver.CellStatus {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "GetCellWiseWinProbability", b, c)
-	ret0, _ := ret[0].(map[ttt.Cell]solver.GameStatus)
+	ret0, _ := ret[0].(map[ttt.Cell]solver.CellStatus)
 	return ret0
 }
 

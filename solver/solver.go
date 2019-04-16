@@ -7,8 +7,8 @@ import (
 
 func Solve(board ttt.Board, analyser Analyser) error {
 	cells := analyser.GetCellWiseWinProbability(board, ttt.O)
-	cellBucket := make(map[GameStatus][]ttt.Cell)
-	for _, gs := range []GameStatus{WIN, LOSE, POTENTIAL_LOSE, POTENTIAL_WIN, NEUTRAL} {
+	cellBucket := make(map[CellStatus][]ttt.Cell)
+	for _, gs := range []CellStatus{WIN, LOSE, POTENTIAL_LOSE, POTENTIAL_WIN, NEUTRAL} {
 		cellBucket[gs] = make([]ttt.Cell, 0)
 	}
 

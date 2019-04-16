@@ -2,24 +2,24 @@ package solver
 
 import "github.com/abdulrahmank/solver/tic_tac_toe/ttt"
 
-type GameStatus int
+type CellStatus int
 
 const (
-	LOSE           GameStatus = -1
-	NEUTRAL        GameStatus = 0
-	WIN            GameStatus = 1
-	POTENTIAL_WIN  GameStatus = 2
-	POTENTIAL_LOSE GameStatus = 3
+	LOSE           CellStatus = -1
+	NEUTRAL        CellStatus = 0
+	WIN            CellStatus = 1
+	POTENTIAL_WIN  CellStatus = 2
+	POTENTIAL_LOSE CellStatus = 3
 )
 
 type Analyser interface {
-	GetCellWiseWinProbability(b ttt.Board, c ttt.BoardCharacter) map[ttt.Cell]GameStatus
+	GetCellWiseWinProbability(b ttt.Board, c ttt.BoardCharacter) map[ttt.Cell]CellStatus
 }
 
 type AnalyserImpl struct{}
 
-func (a *AnalyserImpl) GetCellWiseWinProbability(b ttt.Board, c ttt.BoardCharacter) map[ttt.Cell]GameStatus {
-	result := make(map[ttt.Cell]GameStatus)
+func (a *AnalyserImpl) GetCellWiseWinProbability(b ttt.Board, c ttt.BoardCharacter) map[ttt.Cell]CellStatus {
+	result := make(map[ttt.Cell]CellStatus)
 	for _, row := range b.Cells {
 		for _, cell := range row {
 			result[*cell] = NEUTRAL
