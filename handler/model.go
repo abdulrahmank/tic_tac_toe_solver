@@ -9,8 +9,8 @@ import (
 )
 
 type BoardJson struct {
-	Cells  []CellJson
-	Status solver.GameStatus
+	Cells  []CellJson        `json:"cells"`
+	Status solver.GameStatus `json:"gameStatus"`
 }
 
 type CellJson struct {

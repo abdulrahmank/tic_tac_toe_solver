@@ -9,34 +9,35 @@ import (
 
 func Play(w http.ResponseWriter, r *http.Request) {
 	if r.Method == "POST" {
-		cells := make([]CellJson, 0)
-		if err := json.NewDecoder(r.Body).Decode(&cells); err != nil {
+		boardJson := &BoardJson{}
+		if err := json.NewDecoder(r.Body).Decode(&boardJson); err != nil {
 			w.WriteHeader(http.StatusNotAcceptable)
 			_, _ = w.Write([]byte(err.Error()))
 			return
 		}
-
-		boardJson := &BoardJson{Cells: cells}
 		board := boardJson.ConvertToBoard()
 
-		if playerWon(board) {
-			board.Init(3, 3)
-			result := ConvertToBoardJson(board)
-			result.Status = solver.LOST
-			respond(result, w)
-			return
-		}
+		if !didGameEnd(board) {
+			if playerWon(board) {
+				board.Init(3, 3)
+				result := ConvertToBoardJson(board)
+				result.Status = solver.LOST
+				respond(result, w)
+				return
+			}
 
-		analyserImpl := &solver.AnalyserImpl{}
-		if gs, err := solver.Solve(board, analyserImpl); err != nil {
-			w.WriteHeader(http.StatusInternalServerError)
-		} else {
-			result := ConvertToBoardJson(board)
-			result.Status = gs
-			respond(result, w)
+			analyserImpl := &solver.AnalyserImpl{}
+			if gs, err := solver.Solve(board, analyserImpl); err != nil {
+				w.WriteHeader(http.StatusInternalServerError)
+			} else {
+				result := ConvertToBoardJson(board)
+				result.Status = gs
+				respond(result, w)
+			}
 		}
+	} else {
+		w.WriteHeader(http.StatusNotImplemented)
 	}
-	w.WriteHeader(http.StatusNotImplemented)
 }
 
 func respond(result BoardJson, w http.ResponseWriter) {
@@ -49,15 +50,23 @@ func respond(result BoardJson, w http.ResponseWriter) {
 }
 
 func playerWon(board ttt.Board) bool {
+	return didWinGame(board, ttt.X)
+}
+
+func didWinGame(board ttt.Board, character ttt.BoardCharacter) bool {
 	for i := 0; i < board.Rows; i++ {
-		if board.IsHorizontalWin(i, string(ttt.X)) {
+		if board.IsHorizontalWin(i, string(character)) {
 			return true
 		}
 	}
 	for i := 0; i < board.Cols; i++ {
-		if board.IsVerticalWin(i, string(ttt.X)) {
+		if board.IsVerticalWin(i, string(character)) {
 			return true
 		}
 	}
-	return board.IsDiagonalWin(string(ttt.X))
+	return board.IsDiagonalWin(string(character))
+}
+
+func didGameEnd(board ttt.Board) bool {
+	return didWinGame(board, ttt.O) || len(board.GetEmptyCells()) > 0
 }
