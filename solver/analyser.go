@@ -47,7 +47,7 @@ func (a *AnalyserImpl) GetCellWiseWinProbability(b ttt.Board, c ttt.BoardCharact
 
 			if i == j {
 				for ti := 0; ti < b.Cols; ti++ {
-					colStatus[b.Cells[ti][ti].Val] += 1
+					diagonalStatus[b.Cells[ti][ti].Val] += 1
 				}
 			}
 			// 2 will only work for 3 X 3 board
@@ -60,9 +60,9 @@ func (a *AnalyserImpl) GetCellWiseWinProbability(b ttt.Board, c ttt.BoardCharact
 				chars := []ttt.BoardCharacter{ttt.X, ttt.O}
 				for _, ch := range chars {
 					if ch != c {
-						if rowStatus[string(ch)]|colStatus[string(ch)]|diagonalStatus[string(c)] >= 2 {
+						if rowStatus[string(ch)]|colStatus[string(ch)]|diagonalStatus[string(ch)] >= 2 {
 							result[*b.Cells[i][j]] = LOSE
-						} else if rowStatus[string(ch)]|colStatus[string(ch)]|diagonalStatus[string(c)] >= 1 {
+						} else if rowStatus[string(ch)]|colStatus[string(ch)]|diagonalStatus[string(ch)] >= 1 {
 							result[*b.Cells[i][j]] = POTENTIAL_LOSE
 						}
 					}
