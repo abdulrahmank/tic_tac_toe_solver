@@ -17,15 +17,17 @@ func Play(w http.ResponseWriter, r *http.Request) {
 		}
 		board := boardJson.ConvertToBoard()
 
-		if !didGameEnd(board) {
-			if playerWon(board) {
-				board.Init(3, 3)
-				result := ConvertToBoardJson(board)
-				result.Status = solver.LOST
-				respond(result, w)
-				return
-			}
-
+		if playerWon(board) {
+			board.Init(3, 3)
+			result := ConvertToBoardJson(board)
+			result.Status = solver.LOST
+			respond(result, w)
+		} else if len(board.GetEmptyCells()) == 0 {
+			board.Init(3, 3)
+			result := ConvertToBoardJson(board)
+			result.Status = solver.DRAW
+			respond(result, w)
+		} else {
 			analyserImpl := &solver.AnalyserImpl{}
 			if gs, err := solver.Solve(board, analyserImpl); err != nil {
 				w.WriteHeader(http.StatusInternalServerError)
@@ -34,9 +36,6 @@ func Play(w http.ResponseWriter, r *http.Request) {
 				result.Status = gs
 				respond(result, w)
 			}
-		} else {
-			w.WriteHeader(http.StatusOK)
-			_, _ = w.Write([]byte("Game ended"))
 		}
 	} else {
 		w.WriteHeader(http.StatusNotImplemented)
@@ -68,8 +67,4 @@ func didWinGame(board ttt.Board, character ttt.BoardCharacter) bool {
 		}
 	}
 	return board.IsDiagonalWin(string(character))
-}
-
-func didGameEnd(board ttt.Board) bool {
-	return didWinGame(board, ttt.O) || len(board.GetEmptyCells()) == 0
 }
