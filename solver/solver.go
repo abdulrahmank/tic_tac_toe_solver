@@ -8,10 +8,10 @@ import (
 type GameStatus string
 
 const (
-	LOST        GameStatus = "lost"
+	LOST        GameStatus = "You won!"
 	IN_PROGRESS GameStatus = "inProgress"
-	WON         GameStatus = "won"
-	DRAW        GameStatus = "draw"
+	WON         GameStatus = "You lost!"
+	DRAW        GameStatus = "It's a tie"
 )
 
 func Solve(board ttt.Board, analyser Analyser) (GameStatus, error) {
