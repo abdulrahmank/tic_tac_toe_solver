@@ -34,6 +34,9 @@ func Play(w http.ResponseWriter, r *http.Request) {
 				result.Status = gs
 				respond(result, w)
 			}
+		} else {
+			w.WriteHeader(http.StatusOK)
+			_, _ = w.Write([]byte("Game ended"))
 		}
 	} else {
 		w.WriteHeader(http.StatusNotImplemented)

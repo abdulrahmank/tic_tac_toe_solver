@@ -35,7 +35,8 @@ func (a *AnalyserImpl) GetCellWiseWinProbability(b ttt.Board, c ttt.BoardCharact
 			}
 			rowStatus := make(map[string]int)
 			colStatus := make(map[string]int)
-			diagonalStatus := make(map[string]int)
+			leadingDiagonalStatus := make(map[string]int)
+			trailingDiagonalStatus := make(map[string]int)
 
 			for ti := 0; ti < b.Rows; ti++ {
 				rowStatus[b.Cells[ti][j].Val] += 1
@@ -45,24 +46,28 @@ func (a *AnalyserImpl) GetCellWiseWinProbability(b ttt.Board, c ttt.BoardCharact
 				colStatus[b.Cells[i][ti].Val] += 1
 			}
 
-			if i == j {
-				for ti := 0; ti < b.Cols; ti++ {
-					diagonalStatus[b.Cells[ti][ti].Val] += 1
-				}
+			for ti := 0; ti < b.Cols; ti++ {
+				leadingDiagonalStatus[b.Cells[ti][ti].Val] += 1
 			}
+
+			for i, j := 0, b.Cols-1; i < b.Rows && j >= 0; i++ {
+				trailingDiagonalStatus[b.Cells[i][j].Val] += 1
+				j -= 1
+			}
+
 			// 2 will only work for 3 X 3 board
-			if rowStatus[string(c)]|colStatus[string(c)]|diagonalStatus[string(c)] >= 2 {
+			if rowStatus[string(c)]|colStatus[string(c)]|leadingDiagonalStatus[string(c)]|trailingDiagonalStatus[string(c)] >= 2 {
 				result[*b.Cells[i][j]] = WIN
 			} else {
-				if rowStatus[string(c)]|colStatus[string(c)]|diagonalStatus[string(c)] >= 1 {
+				if rowStatus[string(c)]|colStatus[string(c)]|leadingDiagonalStatus[string(c)]|trailingDiagonalStatus[string(c)] >= 1 {
 					result[*b.Cells[i][j]] = POTENTIAL_WIN
 				}
 				chars := []ttt.BoardCharacter{ttt.X, ttt.O}
 				for _, ch := range chars {
 					if ch != c {
-						if rowStatus[string(ch)]|colStatus[string(ch)]|diagonalStatus[string(ch)] >= 2 {
+						if rowStatus[string(ch)]|colStatus[string(ch)]|leadingDiagonalStatus[string(ch)]|trailingDiagonalStatus[string(ch)] >= 2 {
 							result[*b.Cells[i][j]] = LOSE
-						} else if rowStatus[string(ch)]|colStatus[string(ch)]|diagonalStatus[string(ch)] >= 1 {
+						} else if rowStatus[string(ch)]|colStatus[string(ch)]|leadingDiagonalStatus[string(ch)]|trailingDiagonalStatus[string(ch)] >= 1 {
 							result[*b.Cells[i][j]] = POTENTIAL_LOSE
 						}
 					}
