@@ -98,10 +98,24 @@ func (b *Board) IsVerticalWin(col int, val string) bool {
 }
 
 func (b *Board) IsDiagonalWin(val string) bool {
+	return isLeadingDiagonalWin(*b, val) || isTrailingDiagonalWin(*b, val)
+}
+
+func isLeadingDiagonalWin(b Board, val string) bool {
 	for i := 0; i < b.Rows; i++ {
 		if b.Cells[i][i].Val != val {
 			return false
 		}
+	}
+	return true
+}
+
+func isTrailingDiagonalWin(b Board, val string) bool {
+	for i, j := 0, b.Cols-1; i < b.Rows && j >= 0; i++ {
+		if b.Cells[i][j].Val != val {
+			return false
+		}
+		j -= 1
 	}
 	return true
 }

@@ -112,13 +112,30 @@ func TestBoard_VerticalWin(t *testing.T) {
 	}
 }
 
-func TestBoard_DiagonalWin(t *testing.T) {
+func TestBoard_LeadingDiagonalWin(t *testing.T) {
 	board := ttt.Board{}
 	board.Init(3, 3)
 
 	board.Cells[0][0].Val = "X"
 	board.Cells[1][1].Val = "X"
 	board.Cells[2][2].Val = "X"
+
+	if !board.IsDiagonalWin("X") {
+		t.Error("Expected win")
+	}
+
+	if board.IsDiagonalWin("O") {
+		t.Error("Din't expect a win")
+	}
+}
+
+func TestBoard_TrailingDiagonalWin(t *testing.T) {
+	board := ttt.Board{}
+	board.Init(3, 3)
+
+	board.Cells[0][2].Val = "X"
+	board.Cells[1][1].Val = "X"
+	board.Cells[2][0].Val = "X"
 
 	if !board.IsDiagonalWin("X") {
 		t.Error("Expected win")

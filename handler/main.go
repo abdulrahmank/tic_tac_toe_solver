@@ -68,5 +68,5 @@ func didWinGame(board ttt.Board, character ttt.BoardCharacter) bool {
 }
 
 func didGameEnd(board ttt.Board) bool {
-	return didWinGame(board, ttt.O) || len(board.GetEmptyCells()) > 0
+	return didWinGame(board, ttt.O) || len(board.GetEmptyCells()) == 0
 }
