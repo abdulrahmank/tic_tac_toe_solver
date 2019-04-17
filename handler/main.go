@@ -15,31 +15,38 @@ func Play(w http.ResponseWriter, r *http.Request) {
 			_, _ = w.Write([]byte(err.Error()))
 			return
 		}
-		board := boardJson.ConvertToBoard()
 
-		if playerWon(board) {
-			board.Init(3, 3)
-			result := ConvertToBoardJson(board)
-			result.Status = solver.LOST
-			respond(result, w)
-		} else if len(board.GetEmptyCells()) == 0 {
-			board.Init(3, 3)
-			result := ConvertToBoardJson(board)
-			result.Status = solver.DRAW
-			respond(result, w)
+		if result, err := play(*boardJson); err != nil {
+			w.WriteHeader(http.StatusInternalServerError)
 		} else {
-			analyserImpl := &solver.AnalyserImpl{}
-			if gs, err := solver.Solve(board, analyserImpl); err != nil {
-				w.WriteHeader(http.StatusInternalServerError)
-			} else {
-				result := ConvertToBoardJson(board)
-				result.Status = gs
-				respond(result, w)
-			}
+			respond(result, w)
 		}
 	} else {
 		w.WriteHeader(http.StatusNotImplemented)
 	}
+}
+
+func play(boardJson BoardJson) (BoardJson, error) {
+	board := boardJson.ConvertToBoard()
+	var result BoardJson
+	if playerWon(board) {
+		board.Init(3, 3)
+		result = ConvertToBoardJson(board)
+		result.Status = solver.LOST
+	} else if len(board.GetEmptyCells()) == 0 {
+		board.Init(3, 3)
+		result = ConvertToBoardJson(board)
+		result.Status = solver.DRAW
+	} else {
+		analyserImpl := &solver.AnalyserImpl{}
+		if gs, err := solver.Solve(board, analyserImpl); err != nil {
+			return BoardJson{}, err
+		} else {
+			result = ConvertToBoardJson(board)
+			result.Status = gs
+		}
+	}
+	return result, nil
 }
 
 func respond(result BoardJson, w http.ResponseWriter) {
