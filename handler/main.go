@@ -4,11 +4,13 @@ import (
 	"encoding/json"
 	"github.com/abdulrahmank/solver/tic_tac_toe/solver"
 	"github.com/abdulrahmank/solver/tic_tac_toe/ttt"
+	"log"
 	"net/http"
 )
 
 func Play(w http.ResponseWriter, r *http.Request) {
 	if r.Method == "POST" {
+		log.Println("Request with post method")
 		boardJson := &BoardJson{}
 		if err := json.NewDecoder(r.Body).Decode(&boardJson); err != nil {
 			w.WriteHeader(http.StatusNotAcceptable)
@@ -21,6 +23,11 @@ func Play(w http.ResponseWriter, r *http.Request) {
 		} else {
 			respond(result, w)
 		}
+	} else if r.Method == "OPTIONS" {
+		log.Println("Request with options method")
+		w.Header().Set("Access-Control-Allow-Origin", "null")
+		w.Header().Set("Access-Control-Allow-Methods", "POST, GET, OPTIONS, PUT, DELETE")
+		w.Header().Set("Access-Control-Allow-Headers", "Accept, Content-Type, Content-Length, Accept-Encoding, X-CSRF-Token, Authorization")
 	} else {
 		w.WriteHeader(http.StatusNotImplemented)
 	}
@@ -53,8 +60,11 @@ func respond(result BoardJson, w http.ResponseWriter) {
 	if bytes, err := json.Marshal(result); err != nil {
 		w.WriteHeader(http.StatusInternalServerError)
 	} else {
+		w.Header().Set("Access-Control-Allow-Origin", "null")
+		w.Header().Set("Access-Control-Allow-Methods", "POST, GET, OPTIONS, PUT, DELETE")
+		w.Header().Set("Access-Control-Allow-Headers", "Accept, Content-Type, Content-Length, Accept-Encoding, X-CSRF-Token, Authorization")
+		w.Header().Set("Content-Type", "application/json")
 		_, _ = w.Write(bytes)
-		w.WriteHeader(http.StatusOK)
 	}
 }
 

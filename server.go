@@ -11,7 +11,7 @@ import (
 func main() {
 	port := os.Getenv("PORT")
 	if port == "" {
-		port = "80"
+		port = "8081"
 	}
 	http.HandleFunc("/play", handler.Play)
 	log.Panic(http.ListenAndServe(fmt.Sprintf(":%s", port), nil))
